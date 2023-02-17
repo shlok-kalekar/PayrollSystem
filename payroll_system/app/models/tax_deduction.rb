@@ -1,0 +1,2 @@
+class TaxDeduction < ApplicationRecord
+end

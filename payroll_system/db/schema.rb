@@ -10,16 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_17_085930) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_20_113720) do
   create_table "attendances", force: :cascade do |t|
-    t.date "current_month"
+    t.integer "current_month"
     t.integer "tot_work_days"
     t.integer "unpaid_leaves"
     t.decimal "attend_rate"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "users_id"
-    t.index ["users_id"], name: "index_attendances_on_users_id"
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
   create_table "leaves", force: :cascade do |t|
@@ -30,28 +30,26 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_17_085930) do
     t.integer "duration"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "users_id"
-    t.index ["users_id"], name: "index_leaves_on_users_id"
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_leaves_on_user_id"
   end
 
   create_table "payslips", force: :cascade do |t|
-    t.float "attendance_deductible"
-    t.float "taxable_salary"
-    t.float "tot_tax"
-    t.float "payable_salary"
+    t.decimal "attendance_deductible"
+    t.decimal "taxable_salary"
+    t.decimal "tot_tax"
+    t.decimal "payable_salary"
     t.date "slip_month"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "users_id"
-    t.index ["users_id"], name: "index_payslips_on_users_id"
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_payslips_on_user_id"
   end
 
   create_table "roles", force: :cascade do |t|
     t.string "role_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "users_id"
-    t.index ["users_id"], name: "index_roles_on_users_id"
   end
 
   create_table "salaries", force: :cascade do |t|
@@ -59,25 +57,25 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_17_085930) do
     t.date "salary_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "users_id"
-    t.index ["users_id"], name: "index_salaries_on_users_id"
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_salaries_on_user_id"
   end
 
   create_table "tax_deductions", force: :cascade do |t|
     t.string "deduct_type"
-    t.float "amount_deduct"
+    t.decimal "amount_deduct"
     t.date "financial_year"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "users_id"
-    t.index ["users_id"], name: "index_tax_deductions_on_users_id"
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_tax_deductions_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
     t.string "gender_type"
-    t.integer "phone_no"
+    t.string "phone_no"
     t.string "designation_type"
     t.string "city_name"
     t.date "join_date"
@@ -90,15 +88,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_17_085930) do
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
     t.string "jti", null: false
+    t.integer "role_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["role_id"], name: "index_users_on_role_id"
   end
 
-  add_foreign_key "attendances", "users", column: "users_id"
-  add_foreign_key "leaves", "users", column: "users_id"
-  add_foreign_key "payslips", "users", column: "users_id"
-  add_foreign_key "roles", "users", column: "users_id"
-  add_foreign_key "salaries", "users", column: "users_id"
-  add_foreign_key "tax_deductions", "users", column: "users_id"
+  add_foreign_key "attendances", "users"
+  add_foreign_key "leaves", "users"
+  add_foreign_key "payslips", "users"
+  add_foreign_key "salaries", "users"
+  add_foreign_key "tax_deductions", "users"
+  add_foreign_key "users", "roles"
 end

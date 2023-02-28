@@ -6,3 +6,43 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
+
+Role.create!("role_type"=>"Administrator")
+Role.create!("role_type"=>"Employee")
+
+User.create!("full_name"=>"Shlok Kalekar",
+              "gender_type"=>"Male",
+              "phone_no"=>"9876543210",
+              "designation_type"=>"Admin Manager",
+              "city_name"=>"Pune",
+              "join_date"=>"2022-01-16",
+              "tot_paid_leaves"=>8, 
+              "email"=>"shlok@josh.com",
+              "password"=>"123456",
+              "role_id"=>1)
+
+User.create!([{
+                "full_name"=>"Radha Sharma",
+                "gender_type"=>"Female",
+                "phone_no"=>"8173801728",
+                "designation_type"=>"SDE",
+                "city_name"=>"Bangalore",
+                "join_date"=>"2022-08-16",
+                "tot_paid_leaves"=>5,
+                "email"=>"radha@josh.com",
+                "password"=>"123456",
+                "role_id"=>2
+              },
+
+              {
+                "full_name"=>"Akshat Nataraj",
+                "gender_type"=>"Male",
+                "phone_no"=>"1920481923",
+                "designation_type"=>"Product Manager",
+                "city_name"=>"Dallas",
+                "join_date"=>"2022-06-16",
+                "tot_paid_leaves"=>7,
+                "email"=>"akshat@josh.com",
+                "password"=>"abcdef",
+                "role_id"=>2}
+              ])

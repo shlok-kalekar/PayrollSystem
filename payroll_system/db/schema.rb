@@ -12,9 +12,9 @@
 
 ActiveRecord::Schema[7.0].define(version: 2023_02_20_113720) do
   create_table "attendances", force: :cascade do |t|
-    t.integer "current_month"
+    t.date "current_month"
     t.integer "tot_work_days"
-    t.integer "unpaid_leaves"
+    t.integer "unpaid_leaves", default: 0
     t.decimal "attend_rate"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -27,7 +27,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_20_113720) do
     t.date "end_date", null: false
     t.string "leave_type", null: false
     t.text "leave_details"
-    t.integer "duration"
+    t.integer "leave_duration"
+    t.string "leave_status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id"
@@ -72,8 +73,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_20_113720) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "first_name"
-    t.string "last_name"
+    t.string "full_name"
     t.string "gender_type"
     t.string "phone_no"
     t.string "designation_type"
@@ -88,7 +88,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_20_113720) do
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
     t.string "jti", null: false
-    t.integer "role_id"
+    t.integer "role_id", default: 2
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

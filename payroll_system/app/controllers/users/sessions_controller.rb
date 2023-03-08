@@ -10,7 +10,9 @@ module Users
       render json: {
         status: { code: 200, message: 'User signed in successfully',
                   data: current_user }
-      }, status: :ok
+      }, status: :ok,
+      except: %i[created_at updated_at jti],
+      include: ["role" => {:only => :role_type}]
     end
 
     def respond_to_on_destroy

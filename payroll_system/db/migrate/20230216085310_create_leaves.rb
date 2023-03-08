@@ -2,7 +2,7 @@
 
 class CreateLeaves < ActiveRecord::Migration[7.0]
   def change
-    create_table :leaves do |t|
+    create_table :leave_balances do |t|
       t.date :start_date, null: false
       t.date :end_date, null: false
       t.string :leave_type, null: false

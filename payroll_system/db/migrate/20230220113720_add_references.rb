@@ -1,7 +1,7 @@
 class AddReferences < ActiveRecord::Migration[7.0]
   def change
     add_reference :attendances, :user, foreign_key: true
-    add_reference :leaves, :user, foreign_key: true
+    add_reference :leave_balances, :user, foreign_key: true
     add_reference :salaries, :user, foreign_key: true
     add_reference :tax_deductions, :user, foreign_key: true
     add_reference :payslips, :user, foreign_key: true

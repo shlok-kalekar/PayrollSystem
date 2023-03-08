@@ -25,24 +25,13 @@ User.create!([{
                 "full_name"=>"Radha Sharma",
                 "gender_type"=>"Female",
                 "phone_no"=>"8173801728",
-                "designation_type"=>"SDE",
+                "designation_type"=>"HR Head",
                 "city_name"=>"Bangalore",
                 "join_date"=>"2022-08-16",
-                "tot_paid_leaves"=>5,
+                "tot_paid_leaves"=>10,
                 "email"=>"radha@josh.com",
-                "password"=>"123456",
-                "role_id"=>2
-              },
-
-              {
-                "full_name"=>"Akshat Nataraj",
-                "gender_type"=>"Male",
-                "phone_no"=>"1920481923",
-                "designation_type"=>"Product Manager",
-                "city_name"=>"Dallas",
-                "join_date"=>"2022-06-16",
-                "tot_paid_leaves"=>7,
-                "email"=>"akshat@josh.com",
                 "password"=>"abcdef",
-                "role_id"=>2}
+                "role_id"=>1
+              }
+
               ])

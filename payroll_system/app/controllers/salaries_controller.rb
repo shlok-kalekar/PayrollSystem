@@ -1,11 +1,19 @@
 class SalariesController < ApplicationController
 
+  load_and_authorize_resource
+
   before_action :set_salary, only: %i[show update destroy]
 
   def index
-    @salary = Salary.all.as_json(except: %i[created_at updated_at jti], include: ["user" => {:only => :full_name}])
-    render json: @salary,
-            status: :ok
+    # @salary = Salary.accessible_by(current_ability)
+    @salary = Salary.all.as_json(except: %i[created_at updated_at], include: ["user" => {:only => :full_name}])
+    if @salary
+      render json: @salary,
+              status: :ok
+    else
+      render json: { message: 'FAILED!'},
+              status: :unprocessable_entity
+    end
   end
 
   def create
@@ -49,7 +57,7 @@ class SalariesController < ApplicationController
   end
 
   def find_emp_salary
-    @user = User.find(params[:id])
+    @user = User.find(current_user.id)
     @salary = Salary.all.where(user_id: @user.id).as_json(except: %i[created_at updated_at], include: ["user" => {:only => :full_name}])
     render json: @salary,
             status: :ok
@@ -57,11 +65,11 @@ class SalariesController < ApplicationController
 
   private
   def salary_params
-    params.require(:salary).permit(:total_salary, :salary_date, :user_id)
+    params.require(:salary).permit(:monthly_salary, :salary_month, :user_id)
   end
 
   def update_params
-    params.require(:salary).permit(:total_salary, :salary_date)
+    params.require(:salary).permit(:monthly_salary, :salary_month)
   end
 
   def set_salary

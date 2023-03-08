@@ -1,11 +1,18 @@
 class TaxDeductionsController < ApplicationController
 
+  load_and_authorize_resource
+
   before_action :set_deduction, only: %i[show update destroy]
 
   def index
     @tax_deduction = TaxDeduction.all.as_json(except: %i[created_at updated_at], include: ["user" => {:only => :full_name}])
-    render json: @tax_deduction,
-            status: :ok  
+    if @user
+      render json: @tax_deduction,
+              status: :ok
+    else
+      render json: { message: 'FAILED!'},
+              status: :unprocessable_entity
+    end
   end
 
   def create
@@ -48,13 +55,20 @@ class TaxDeductionsController < ApplicationController
     end
   end
 
+  def find_tax_deductions
+    @user = User.find(current_user.id)
+    @tax_deduction = TaxDeduction.all.where(user_id: @user.id).as_json(except: %i[created_at updated_at], include: ["user" => {:only => :full_name}])
+    render json: @tax_deduction,
+            status: :ok
+  end
+
   private
-  def tax_params
-    params.require(:tax_deductions).permit(:deduct_type, :amount_deduct, :financial_year, :user_id)
+  def tax_deduction_params
+    params.require(:tax_deduction).permit(:deduct_type, :deduct_amount, :financial_year, :user_id)
   end
 
   def update_params
-    params.require(:tax_deductions).permit(:deduct_type, :amount_deduct, :financial_year)
+    params.require(:tax_deduction).permit(:deduct_type, :deduct_amount, :financial_year)
   end
 
   def set_deduction

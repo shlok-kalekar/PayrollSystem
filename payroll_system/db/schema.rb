@@ -12,17 +12,17 @@
 
 ActiveRecord::Schema[7.0].define(version: 2023_02_20_113720) do
   create_table "attendances", force: :cascade do |t|
-    t.date "current_month"
+    t.date "attendance_month"
     t.integer "tot_work_days"
     t.integer "unpaid_leaves", default: 0
-    t.decimal "attend_rate"
+    t.float "attend_rate"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id"
     t.index ["user_id"], name: "index_attendances_on_user_id"
   end
 
-  create_table "leaves", force: :cascade do |t|
+  create_table "leave_balances", force: :cascade do |t|
     t.date "start_date", null: false
     t.date "end_date", null: false
     t.string "leave_type", null: false
@@ -32,14 +32,14 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_20_113720) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id"
-    t.index ["user_id"], name: "index_leaves_on_user_id"
+    t.index ["user_id"], name: "index_leave_balances_on_user_id"
   end
 
   create_table "payslips", force: :cascade do |t|
-    t.decimal "attendance_deductible"
-    t.decimal "taxable_salary"
-    t.decimal "tot_tax"
-    t.decimal "payable_salary"
+    t.float "attendance_cut"
+    t.float "remaining_salary"
+    t.float "tot_tax"
+    t.float "payable_salary"
     t.date "slip_month"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -54,8 +54,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_20_113720) do
   end
 
   create_table "salaries", force: :cascade do |t|
-    t.decimal "total_salary"
-    t.date "salary_date"
+    t.float "monthly_salary"
+    t.date "salary_month"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id"
@@ -64,7 +64,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_20_113720) do
 
   create_table "tax_deductions", force: :cascade do |t|
     t.string "deduct_type"
-    t.decimal "amount_deduct"
+    t.float "deduct_amount"
     t.date "financial_year"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -96,7 +96,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_20_113720) do
   end
 
   add_foreign_key "attendances", "users"
-  add_foreign_key "leaves", "users"
+  add_foreign_key "leave_balances", "users"
   add_foreign_key "payslips", "users"
   add_foreign_key "salaries", "users"
   add_foreign_key "tax_deductions", "users"

@@ -1,11 +1,18 @@
 class UsersController < ApplicationController
 
+  load_and_authorize_resource
+
   before_action :set_user, only: %i[show update destroy]
 
   def index
     @user = User.all.as_json(except: %i[created_at updated_at jti role_id], include: ["role" => {:only => :role_type}])
-    render json: @user,
-            status: :ok           
+    if @user
+      render json: @user,
+              status: :ok
+    else
+      render json: { message: 'FAILED!'},
+              status: :unprocessable_entity
+    end
   end
 
   def create
@@ -19,9 +26,15 @@ class UsersController < ApplicationController
   end
 
   def show
-    @user.as_json(except: %i[created_at updated_at jti role_id], include: ["role" => {:only => :role_type}])
-    render json: @user,
-    status: :ok
+    if @user
+      render json: @user,
+              status: :ok,
+              except: %i[created_at updated_at jti],
+              include: ["role" => {:only => :role_type}]
+    else
+      render json: { message: 'FAILED!'},
+              status: :unprocessable_entity
+    end
   end
 
   def update
@@ -41,6 +54,13 @@ class UsersController < ApplicationController
       render json: {message: "FAILED!"}
     end
 
+  end
+
+  def find_user_info
+    @user = User.find(current_user.id)
+    @user = User.all.where(id: @user.id).as_json(except: %i[created_at updated_at jwt role_id], include: ["role" => {:only => :role_type}])
+    render json: @user,
+            status: :ok
   end
 
   private

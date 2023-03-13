@@ -1,5 +1,6 @@
-class LeavesChecker
+# frozen_string_literal: true
 
+class LeavesChecker
   attr_accessor :active_leaves, :attendance
 
   def initialize(active_leaves, attendance)
@@ -7,14 +8,13 @@ class LeavesChecker
     @attendance = attendance
   end
 
-  def  check_for_months
-
+  def check_for_months
     attendance_date = @attendance.attendance_month.to_date
     attendance_month = attendance_date.month.to_i
-    month_leave = @leave.where("(start_date BETWEEN ? AND ?) OR (end_date BETWEEN ? AND ?)", attendance_date.beginning_of_month,
-    attendance_date.end_of_month, attendance_date.beginning_of_month,attendance_date.end_of_month)
+    month_leave = @leave.where('(start_date BETWEEN ? AND ?) OR (end_date BETWEEN ? AND ?)', attendance_date.beginning_of_month,
+                               attendance_date.end_of_month, attendance_date.beginning_of_month, attendance_date.end_of_month)
     total_duration = 0
-    wdays = [0,6] #weekend days by numbers on week
+    wdays = [0, 6] # weekend days by numbers on week
     month_leave.each do |x|
       leave_duration = 0
       if x.start_date.to_date.month < attendance_month && x.end_date.to_date.month == attendance_month
@@ -27,12 +27,11 @@ class LeavesChecker
         start_date = x.start_date.to_date
         end_date = x.end_date.to_date
       else
-        render json: {message: "Enter valid dates"}
+        render json: { message: 'Enter valid dates' }
       end
-      leave_duration = (((start_date..end_date).reject { |d| wdays.include? d.wday}).count)
-      total_duration = total_duration + leave_duration
+      leave_duration = ((start_date..end_date).reject { |d| wdays.include? d.wday }).count
+      total_duration += leave_duration
     end
     total_duration
   end
-
 end

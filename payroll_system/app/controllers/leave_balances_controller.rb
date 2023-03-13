@@ -1,81 +1,83 @@
-class LeaveBalancesController < ApplicationController
+# frozen_string_literal: true
 
+class LeaveBalancesController < ApplicationController
   load_and_authorize_resource
 
   before_action :set_leaves, only: %i[show update destroy admin_update]
 
   def index
-    @leave = LeaveBalance.all.as_json(except: %i[created_at updated_at], include: ["user" => {:only => :full_name}])
+    @leave = LeaveBalance.all.as_json(except: %i[created_at updated_at], include: ['user' => { only: :full_name }])
     if @leave
       render json: @leave,
-              status: :ok
+             status: :ok
     else
-      render json: { message: 'FAILED!'},
-              status: :unprocessable_entity
+      render json: { message: 'FAILED!' },
+             status: :unprocessable_entity
     end
   end
 
   def create
     @leave = LeaveBalance.new(leave_balance_params)
     if @leave.save!
-      render json: {message: "Successfully added data"},
-      status: :ok
+      render json: { message: 'Successfully added data' },
+             status: :ok
     else
-      render json: {message: "FAILED!"}
+      render json: { message: 'FAILED!' }
     end
   end
 
   def show
     if @leave
       render json: @leave,
-              status: :ok,
-              except: %i[created_at updated_at],
-              include: ["user" => {:only => :full_name}]
+             status: :ok,
+             except: %i[created_at updated_at],
+             include: ['user' => { only: :full_name }]
     else
-      render json: { message: 'FAILED!'},
-              status: :unprocessable_entity
+      render json: { message: 'FAILED!' },
+             status: :unprocessable_entity
     end
   end
 
   def update
-    if @leave.leave_status == "Approved"
-      render json: {message: "Cannot be changed by user after approval."}
-    elsif @leave.leave_status == "Applied"
+    case @leave.leave_status
+    when 'Approved'
+      render json: { message: 'Cannot be changed by user after approval.' }
+    when 'Applied'
       if @leave.update(leave_update_params)
-        render json: {message: "Successfully updated data!"},
-        status: :ok
+        render json: { message: 'Successfully updated data!' },
+               status: :ok
       else
-        render json: {message: "FAILED!"}
+        render json: { message: 'FAILED!' }
       end
     else
-      render json: {message: "Has been rejected"}
+      render json: { message: 'Has been rejected' }
     end
   end
 
   def destroy
     if @leave.destroy
-      render json: {message: "Successfully deleted data!"},
-      status: :ok
+      render json: { message: 'Successfully deleted data!' },
+             status: :ok
     else
-      render json: {message: "FAILED!"}
+      render json: { message: 'FAILED!' }
     end
   end
 
   def admin_update
     if @leave.update(leave_admin_params)
-      render json: {message: "Successfully updated data!"},
-      status: :ok
+      render json: { message: 'Successfully updated data!' },
+             status: :ok
     else
-      render json: {message: "FAILED!"}
+      render json: { message: 'FAILED!' }
     end
-    
   end
 
   def find_leaves
     @user = User.find(current_user.id)
-    @leave = LeaveBalance.all.where(user_id: @user.id).as_json(except: %i[created_at updated_at], include: ["user" => {:only => :full_name}])
+    @leave = LeaveBalance.all.where(user_id: @user.id).as_json(except: %i[created_at updated_at],
+                                                               include: ['user' => { only: :full_name }])
     render json: @leave,
-            status: :ok
+           status: :ok
   end
 
   private
@@ -95,5 +97,4 @@ class LeaveBalancesController < ApplicationController
   def set_leaves
     @leave = LeaveBalance.find(params[:id])
   end
-
 end

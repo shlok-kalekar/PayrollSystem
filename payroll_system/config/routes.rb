@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-
   devise_for :users, controllers: {
     sessions: 'users/sessions'
-    #registrations: 'users/registrations'
+    # registrations: 'users/registrations'
   }
 
   resources :users, :salaries, :tax_deductions, :attendances, :leave_balances, :payslips
@@ -16,6 +15,4 @@ Rails.application.routes.draw do
   get '/tax_deductions_emp', to: 'tax_deductions#find_tax_deductions'
   get '/payslips_emp', to: 'payslips#find_payslips'
   put '/leave_balances_admin/:id', to: 'leave_balances#admin_update'
-
-
 end

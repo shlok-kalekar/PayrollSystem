@@ -12,7 +12,6 @@ class AttendanceCut
   end
 
   def calculate_attend_cut
-    byebug
     if @attend
       if @sal
         @rem_sal = (@attend_rate / 100) * @monthly_salary

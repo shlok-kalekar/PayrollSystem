@@ -211,7 +211,7 @@ RSpec.describe UsersController, type: :controller do
   context 'DELETE destroy' do
     let!(:role) { create :role }
     let!(:role1) { create :role, role_type: 'Employee' }
-    let!(:admin_user) { create :user, role: }
+    let!(:admin_user) { create :user }
     let!(:user) { create :user, role: role1 }
     let!(:user1) { create :user, role: role1 }
 
@@ -222,7 +222,7 @@ RSpec.describe UsersController, type: :controller do
       expect(JSON.parse(response.body)['message']).to eq('Successfully deleted data!')
     end
 
-    it 'should return not_found if user not found' do
+    it 'should not allow use of if unauthorised' do
       sign_in(user)
       delete :destroy, params: { id: user1.id }
       expect(response.status).to eq(200)
